@@ -3,12 +3,15 @@ package kr.ac.kopo.contextmenutest;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -16,10 +19,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
-    Button btnZoomin;
-    Button btnRotation;
+    Button btnRotation, btnZoomin;
     LinearLayout linear;
+
+    int rotationDegree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +35,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        btnZoomin = findViewById(R.id.btn_change);
         linear = findViewById(R.id.main);
+
+        btnZoomin = findViewById(R.id.btn_change);
 
         Button btnAlert = findViewById(R.id.btn_alert);
         btnAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 대화상자내의 메시지를 "배경색을 파랑색으로 변경할까요? 로 변경
-                // 대화상자내의 확인 버튼을 클릭: 액티비티의 LinearLayout 배경색 파랑으로 변경
-                // 대화상자내의 취소 버튼을 클릭: 배경색 변화 없음
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("대화상자연습");
                 dialog.setMessage("배경색을 파랑색으로 변경할까요?");
@@ -60,4 +61,21 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(btnRotation);
         registerForContextMenu(btnZoomin);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater menuInflater = getMenuInflater();
+
+        if (v == btnRotation) {
+            menu.setHeaderTitle("배경색변경");
+            menuInflater.inflate(R.menu.context_menu1, menu);
+        }
+
+        if (v == btnZoomin) {
+            menu.setHeaderTitle("버튼 변경");
+            menuInflater.inflate(R.menu.context_menu2, menu);
+        }
+    }
+
 }
